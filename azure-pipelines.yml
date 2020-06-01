@@ -47,12 +47,13 @@ jobs:
           script: 'func --help'
 
       # 3. test
-      - task: AzurePowerShell@4
-        displayName: func test2
+      - task: AzureCLI@2
+        displayName: Azure CLI
         inputs:
           azureSubscription: '$(TEST_AZURE_SUBSCRIPTION)'
-          pwsh: true
-          inline: func --help
-          errorActionPreference: 'stop'
-          failOnStandardError: true
-          azurePowerShellVersion: 'LatestVersion'
+          scriptType: ps
+          scriptLocation: inlineScript
+          inlineScript: |
+            az --version
+            az account show
+            func --help
