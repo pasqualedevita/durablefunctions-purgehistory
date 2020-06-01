@@ -51,6 +51,7 @@ jobs:
         displayName: func test2
         inputs:
           azureSubscription: '$(TEST_AZURE_SUBSCRIPTION)'
+          pwsh: true
           inline: func --help
           errorActionPreference: 'stop'
           failOnStandardError: true
