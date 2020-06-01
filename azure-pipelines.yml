@@ -1,0 +1,51 @@
+# Azure DevOps pipeline for automating purge durable functions history.
+#
+# The following parameter needs to be set to identify the environment for which
+# should be ordered or renewed a certificate via ACME:
+# - ENVIRONMENT: TEST | PRODUCTION
+#
+# The following pipeline variables have to be added and configured based on the
+# environment:
+# - PRODUCTION_AZURE_SUBSCRIPTION: service connection name
+#
+# - TEST_AZURE_SUBSCRIPTION: service connection name for test only
+
+parameters:
+  - name: 'ENVIRONMENT'
+    displayName: 'Select the environment for which purge durable function history:'
+    type: string
+    default: TEST
+    values:
+      - TEST
+      - PRODUCTION
+
+# Linux based agent; all except the first step will also work on Windows
+pool:
+  vmImage: 'ubuntu-latest'
+
+# The scheduled trigger will be set in the Azure DevOps portal
+trigger: none
+
+jobs:
+  - job: purge_df_history
+    steps:
+      # 1. Set the number of the build
+      - task: PowerShell@2
+        displayName: Update Build Number
+        inputs:
+          targetType: 'inline'
+          script: '$id = "$(Build.BuildId)"; $date = Get-Date -Format "yyyy.MMdd"; Write-Host "##vso[build.updatebuildnumber]$date.$id"'
+
+      # 2. Install the Azure Functions Core Tools our script will need
+      - task: FuncToolsInstaller@0
+        displayName: Install Azure Functions Core Tools
+
+      # 3. test
+      - task: AzurePowerShell@4
+        displayName: func test
+        inputs:
+          azureSubscription: '$(TEST_AZURE_SUBSCRIPTION)'
+          inline: func --help
+          errorActionPreference: 'stop'
+          failOnStandardError: true
+          azurePowerShellVersion: 'LatestVersion'
