@@ -51,8 +51,8 @@ jobs:
         displayName: Azure CLI
         inputs:
           azureSubscription: '$(TEST_AZURE_SUBSCRIPTION)'
-          scriptType: ps
-          scriptLocation: inlineScript
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
           inlineScript: |
             az --version
             az account show
