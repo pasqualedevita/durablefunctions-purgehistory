@@ -40,9 +40,15 @@ jobs:
       - task: FuncToolsInstaller@0
         displayName: Install Azure Functions Core Tools
 
+      - task: PowerShell@2
+        displayName: func test1
+        inputs:
+          targetType: 'inline'
+          script: 'func --help'
+
       # 3. test
       - task: AzurePowerShell@4
-        displayName: func test
+        displayName: func test2
         inputs:
           azureSubscription: '$(TEST_AZURE_SUBSCRIPTION)'
           inline: func --help
