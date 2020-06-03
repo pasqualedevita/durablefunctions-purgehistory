@@ -50,6 +50,20 @@ parameters:
       - canceled
       - failed
 
+variables:
+  - name: 'STORAGE_ACCOUNT'
+    value: '${{ parameters.STORAGE_ACCOUNT }}'
+  - name: 'TASK_HUB'
+    value: '${{ parameters.TASK_HUB }}'
+  - name: 'NO_DATE_FILTER'
+    value: '${{ parameters.NO_DATE_FILTER }}'
+  - name: 'DAYS_BEFORE'
+    value: '${{ parameters.DAYS_BEFORE }}'
+  - name: 'NO_STATUS_FILTER'
+    value: '${{ parameters.NO_STATUS_FILTER }}'
+  - name: 'LIST_STATUS'
+    value: '${{ parameters.LIST_STATUS }}'
+
 # Linux based agent; all except the first step will also work on Windows
 pool:
   vmImage: 'ubuntu-latest'
