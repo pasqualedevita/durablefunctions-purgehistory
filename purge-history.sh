@@ -15,7 +15,6 @@ echo "--- INFO --- DATE BEFORE: "$DATE_BEFORE
 echo "--- INFO --- START PURGE HISTORY STORAGE ACCOUNT: "${STORAGE_ACCOUNT}
   
 cd dummy-project
-ls -la
 # create empty local.settings.json
 touch local.settings.json
 

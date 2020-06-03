@@ -50,6 +50,5 @@ jobs:
           inlineScript: |
             for entry in df-conf/*
             do
-              echo ${entry}
               bash purge-history.sh ${entry}
             done
