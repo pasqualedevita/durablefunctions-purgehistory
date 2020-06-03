@@ -54,8 +54,5 @@ jobs:
         inputs:
           azureSubscription: '$(TEST_AZURE_SUBSCRIPTION)'
           scriptType: 'bash'
-          scriptLocation: 'inlineScript'
-          inlineScript: |
-            DATE_BEFORE=$(date -I -d "-10 days")
-            echo $DATE_BEFORE
-            ls -la
+          scriptLocation: 'scriptPath'
+          scriptPath: 'purge-history.sh'
