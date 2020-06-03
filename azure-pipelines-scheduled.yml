@@ -7,25 +7,16 @@
 # The following pipeline variables have to be added and configured based on the
 # environment:
 # - PRODUCTION_AZURE_SUBSCRIPTION: service connection name
-#
 # - TEST_AZURE_SUBSCRIPTION: service connection name for test only
 
 parameters:
   - name: 'ENVIRONMENT'
     displayName: 'Select the environment for which purge durable function history:'
     type: string
-    default: TEST
+    default: DEV-SERVICE_PRINCIPAL-CONNECTION
     values:
-      - TEST
-      - PRODUCTION
-  - name: 'STATUS'
-    displayName: 'Status'
-    default: completed
-    values:
-      - completed
-      - terminated
-      - canceled
-      - failed
+      - DEV-SERVICE_PRINCIPAL-CONNECTION
+      - PRODUCTION_FAKE
 
 # Linux based agent; all except the first step will also work on Windows
 pool:
@@ -48,11 +39,17 @@ jobs:
       - task: FuncToolsInstaller@0
         displayName: Install Azure Functions Core Tools
 
-      # 3. test
+      # 3. Purge History
       - task: AzureCLI@2
         displayName: Purge History
         inputs:
-          azureSubscription: '$(TEST_AZURE_SUBSCRIPTION)'
+          azureSubscription: '${{ parameters.ENVIRONMENT }}'
           scriptType: 'bash'
-          scriptLocation: 'scriptPath'
-          scriptPath: 'purge-history.sh'
+          scriptLocation: 'inlineScript'
+          failOnStandardError: true
+          inlineScript: |
+            for entry in df-conf/*
+            do
+              echo ${entry}
+              bash purge-history.sh ${entry}
+            done
