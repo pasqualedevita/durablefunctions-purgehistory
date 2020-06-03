@@ -37,9 +37,9 @@ trigger: none
 jobs:
   - job: purge_df_history
     steps:
-      # 1. Set the number of the build
+      # 1. Set the number of the run
       - task: PowerShell@2
-        displayName: Update Build Number
+        displayName: Update Run Number
         inputs:
           targetType: 'inline'
           script: '$id = "$(Build.BuildId)"; $date = Get-Date -Format "yyyy.MMdd"; Write-Host "##vso[build.updatebuildnumber]$date.$id"'
@@ -50,7 +50,7 @@ jobs:
 
       # 3. test
       - task: AzureCLI@2
-        displayName: Azure CLI
+        displayName: Purge History
         inputs:
           azureSubscription: '$(TEST_AZURE_SUBSCRIPTION)'
           scriptType: 'bash'
@@ -58,3 +58,4 @@ jobs:
           inlineScript: |
             DATE_BEFORE=$(date -I -d "-10 days")
             echo $DATE_BEFORE
+            ls -la
