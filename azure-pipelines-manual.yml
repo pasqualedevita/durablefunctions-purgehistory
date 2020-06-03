@@ -69,8 +69,8 @@ jobs:
           scriptLocation: 'inlineScript'
           failOnStandardError: true
           inlineScript: |
-            echo ${{ parameters.STORAGE_ACCOUNT }} >> df-conf/manual.env
-            echo ${{ parameters.TASK_HUB }} >> df-conf/manual.env
-            echo ${{ parameters.DAYS_BEFORE }} >> df-conf/manual.env
-            echo ${{ parameters.LIST_STATUS }} >> df-conf/manual.env
+            echo STORAGE_ACCOUNT=${{ parameters.STORAGE_ACCOUNT }} >> df-conf/manual.env
+            echo TASK_HUB=${{ parameters.TASK_HUB }} >> df-conf/manual.env
+            echo DAYS_BEFORE=${{ parameters.DAYS_BEFORE }} >> df-conf/manual.env
+            echo LIST_STATUS=${{ parameters.LIST_STATUS }} >> df-conf/manual.env
             cat df-conf/manual.env
