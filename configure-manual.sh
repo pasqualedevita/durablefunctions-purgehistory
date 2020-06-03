@@ -2,11 +2,6 @@
 
 CONF_FILE=$1
 
-if [ ! -f "${CONF_FILE}" ]; then
-  echo "--- ERROR --- ${CONF_FILE} does not exist"
-  exit 1
-fi
-
 echo STORAGE_ACCOUNT=${{ parameters.STORAGE_ACCOUNT }} >> ${CONF_FILE}
 
 echo TASK_HUB=${{ parameters.TASK_HUB }} >> ${CONF_FILE}
