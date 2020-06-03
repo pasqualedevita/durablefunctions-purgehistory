@@ -17,3 +17,5 @@ if [ "${NO_STATUS_FILTER}" = true ]; then
 else
   echo "LIST_STATUS=""'${LIST_STATUS}'" >> ${CONF_FILE}
 fi
+
+cat ${CONF_FILE}
