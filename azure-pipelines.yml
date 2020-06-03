@@ -18,6 +18,14 @@ parameters:
     values:
       - TEST
       - PRODUCTION
+  - name: 'STATUS'
+    displayName: 'Status'
+    default: completed
+    values:
+      - completed
+      - terminated
+      - canceled
+      - failed
 
 # Linux based agent; all except the first step will also work on Windows
 pool:
@@ -40,12 +48,6 @@ jobs:
       - task: FuncToolsInstaller@0
         displayName: Install Azure Functions Core Tools
 
-      - task: PowerShell@2
-        displayName: func test1
-        inputs:
-          targetType: 'inline'
-          script: 'func --help'
-
       # 3. test
       - task: AzureCLI@2
         displayName: Azure CLI
@@ -54,6 +56,5 @@ jobs:
           scriptType: 'bash'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            az --version
-            az account show
-            func --help
+            DATE_BEFORE=$(date -I -d "-10 days")
+            echo $DATE_BEFORE
