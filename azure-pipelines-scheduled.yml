@@ -50,6 +50,6 @@ jobs:
           inlineScript: |
             for entry in df-conf/*
             do
-              ##vso[task.logdetail]current operation
+              Write-Host "##vso[task.logdetail]current operation"
               bash purge-history.sh ${entry}
             done
