@@ -26,12 +26,23 @@ parameters:
     displayName: 'Set TaskHub name:'
     type: string
 
+  - name: 'NO_DATE_FILTER'
+    displayName: 'Apply purge without date filter (ignore days before)'
+    type: boolean
+    default: false
+
   - name: 'DAYS_BEFORE'
     displayName: 'Set days before:'
     type: number
+    default: 30
+
+  - name: 'NO_STATUS_FILTER'
+    displayName: 'Apply purge to all status (ignore status)'
+    type: boolean
+    default: false
 
   - name: 'LIST_STATUS'
-    displayName: 'Select Status:'
+    displayName: 'Set status:'
     type: string
     values:
       - completed
@@ -69,8 +80,5 @@ jobs:
           scriptLocation: 'inlineScript'
           failOnStandardError: true
           inlineScript: |
-            echo STORAGE_ACCOUNT=${{ parameters.STORAGE_ACCOUNT }} >> df-conf/manual.env
-            echo TASK_HUB=${{ parameters.TASK_HUB }} >> df-conf/manual.env
-            echo DAYS_BEFORE=${{ parameters.DAYS_BEFORE }} >> df-conf/manual.env
-            echo LIST_STATUS=${{ parameters.LIST_STATUS }} >> df-conf/manual.env
+            bash configure-manual.sh df-conf/manual.env
             bash purge-history.sh df-conf/manual.env
