@@ -2,6 +2,13 @@
 
 CONF_FILE=$1
 
+echo ${STORAGE_ACCOUNT}
+echo ${TASK_HUB}
+echo ${NO_DATE_FILTER}
+echo ${DAYS_BEFORE}
+echo ${NO_STATUS_FILTER}
+echo ${LIST_STATUS}
+
 echo "STORAGE_ACCOUNT=""'${STORAGE_ACCOUNT}'" > ${CONF_FILE}
 
 echo "TASK_HUB=""'${TASK_HUB}'" >> ${CONF_FILE}
@@ -17,3 +24,5 @@ if [ "${NO_STATUS_FILTER^^}" = TRUE ]; then
 else
   echo "LIST_STATUS=""'${LIST_STATUS}'" >> ${CONF_FILE}
 fi
+
+cat ${CONF_FILE}
