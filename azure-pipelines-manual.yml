@@ -73,4 +73,4 @@ jobs:
             echo TASK_HUB=${{ parameters.TASK_HUB }} >> df-conf/manual.env
             echo DAYS_BEFORE=${{ parameters.DAYS_BEFORE }} >> df-conf/manual.env
             echo LIST_STATUS=${{ parameters.LIST_STATUS }} >> df-conf/manual.env
-            cat df-conf/manual.env
+            bash purge-history.sh df-conf/manual.env
