@@ -1,0 +1,76 @@
+# Azure DevOps pipeline for automating purge durable functions history.
+#
+# The following parameter needs to be set to identify the environment for which
+# should be ordered or renewed a certificate via ACME:
+# - ENVIRONMENT: TEST | PRODUCTION
+#
+# The following pipeline variables have to be added and configured based on the
+# environment:
+# - PRODUCTION_AZURE_SUBSCRIPTION: service connection name
+# - TEST_AZURE_SUBSCRIPTION: service connection name for test only
+
+parameters:
+  - name: 'ENVIRONMENT'
+    displayName: 'Select the environment for which purge durable function history:'
+    type: string
+    default: DEV-SERVICE_PRINCIPAL-CONNECTION
+    values:
+      - DEV-SERVICE_PRINCIPAL-CONNECTION
+      - PRODUCTION_FAKE
+
+  - name: 'STORAGE_ACCOUNT'
+    displayName: 'Set Storage Account name:'
+    type: string
+
+  - name: 'TASK_HUB'
+    displayName: 'Set TaskHub name:'
+    type: string
+
+  - name: 'DAYS_BEFORE'
+    displayName: 'Set days before:'
+    type: number
+
+  - name: 'LIST_STATUS'
+    displayName: 'Select Status:'
+    type: string
+    values:
+      - completed
+      - terminated
+      - canceled
+      - failed
+
+# Linux based agent; all except the first step will also work on Windows
+pool:
+  vmImage: 'ubuntu-latest'
+
+# The scheduled trigger will be set in the Azure DevOps portal
+trigger: none
+
+jobs:
+  - job: purge_df_history
+    steps:
+      # 1. Set the number of the run
+      - task: PowerShell@2
+        displayName: Update Run Number
+        inputs:
+          targetType: 'inline'
+          script: '$id = "$(Build.BuildId)"; $date = Get-Date -Format "yyyy.MMdd"; Write-Host "##vso[build.updatebuildnumber]$date.$id"'
+
+      # 2. Install the Azure Functions Core Tools our script will need
+      - task: FuncToolsInstaller@0
+        displayName: Install Azure Functions Core Tools
+
+      # 3. Purge History
+      - task: AzureCLI@2
+        displayName: Purge History
+        inputs:
+          azureSubscription: '${{ parameters.ENVIRONMENT }}'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          failOnStandardError: true
+          inlineScript: |
+            echo ${STORAGE_ACCOUNT} >> df-conf/manual.env
+            echo ${TASK_HUB} >> df-conf/manual.env
+            echo ${DAYS_BEFORE} >> df-conf/manual.env
+            echo ${LIST_STATUS} >> df-conf/manual.env
+            cat df-conf/manual.env
