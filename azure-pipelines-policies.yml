@@ -1,17 +1,12 @@
 # Azure DevOps pipeline for automating purge durable functions history.
-#
+# All files with .env in policies folder are applied.
+# 
 # The following parameter needs to be set to identify the Azure subscription :
 # - SUBSCRIPTION: PROD-IO-SERVICE-CONN | DEV-IO-SERVICE-CONN
 #
 # The following pipeline parameters have to be setted for manual execution:
 # - SUBSCRIPTION: service connection name
 # - DRY_RUN: run pipeline without apply any changes
-# - STORAGE_ACCOUNT: storage account name to connect
-# - TASK_HUB: taskhub name setted in durable function host.json
-# - NO_DATE_FILTER: if true do not apply any date filter (ignore DAYS_BEFORE)
-# - DAYS_BEFORE: number of days to apply date filter (negative -> past, positive -> future)
-# - NO_STATUS_FILTER: if true do not apply any status filter (ignore LIST_STATUS)
-# - LIST_STATUS: filter orchestrator's status
 
 parameters:
   - name: 'SUBSCRIPTION'
@@ -22,65 +17,22 @@ parameters:
       - DEV-SERVICE_PRINCIPAL-CONNECTION
       - PROD-IO-SERVICE-CONN
       - DEV-IO-SERVICE-CONN
-
+      
   - name: 'DRY_RUN'
     displayName: 'Dry run (do not apply changes)'
     type: boolean
     default: false
 
-  - name: 'STORAGE_ACCOUNT'
-    displayName: 'Set Storage Account name'
-    type: string
-
-  - name: 'TASK_HUB'
-    displayName: 'Set TaskHub name'
-    type: string
-
-  - name: 'NO_DATE_FILTER'
-    displayName: 'Apply purge without date filter (ignore days)'
-    type: boolean
-    default: false
-
-  - name: 'DAYS_BEFORE'
-    displayName: 'Set days (negative -> past, positive -> future)'
-    type: number
-    default: -30
-
-  - name: 'NO_STATUS_FILTER'
-    displayName: 'Apply purge to all status (ignore status)'
-    type: boolean
-    default: false
-
-  - name: 'LIST_STATUS'
-    displayName: 'Set status'
-    type: string
-    values:
-      - completed
-      - terminated
-      - canceled
-      - failed
-
 variables:
   - name: 'DRY_RUN'
     value: '${{ parameters.DRY_RUN }}'
-  - name: 'STORAGE_ACCOUNT'
-    value: '${{ parameters.STORAGE_ACCOUNT }}'
-  - name: 'TASK_HUB'
-    value: '${{ parameters.TASK_HUB }}'
-  - name: 'NO_DATE_FILTER'
-    value: '${{ parameters.NO_DATE_FILTER }}'
-  - name: 'DAYS_BEFORE'
-    value: '${{ parameters.DAYS_BEFORE }}'
-  - name: 'NO_STATUS_FILTER'
-    value: '${{ parameters.NO_STATUS_FILTER }}'
-  - name: 'LIST_STATUS'
-    value: '${{ parameters.LIST_STATUS }}'
 
 pool:
   vmImage: 'ubuntu-latest'
 
-# Manual execution
+# The scheduled trigger will be set in the Azure DevOps portal
 trigger: none
+pr: none
 
 jobs:
   - job: purge_df_history
@@ -105,5 +57,8 @@ jobs:
           scriptLocation: 'inlineScript'
           failOnStandardError: true
           inlineScript: |
-            bash src/configure-manual.sh policies/tmp-manual.env
-            bash src/purge-history.sh policies/tmp-manual.env
+            for policy in policies/*.env
+            do
+              [[ ! -e $policy ]] && continue  # continue, if file does not exist
+              bash src/purge-history.sh ${policy}
+            done

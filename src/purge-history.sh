@@ -14,15 +14,18 @@
 # 4. purge orchestrators history with specified parameters
 # 5. delete temporary local.settings.json
 
-CONF_FILE=$1
+POLICY_FILE=$1
 
-if [ ! -f "${CONF_FILE}" ]; then
-  echo "--- ERROR --- ${CONF_FILE} does not exist"
+if [ ! -f "${POLICY_FILE}" ]; then
+  echo "--- ERROR --- policy file ${POLICY_FILE} does not exist"
   exit 1
 fi
 
 # load env variables
-source ${CONF_FILE}
+source ${POLICY_FILE}
+
+echo "--- INFO --- policy file "${POLICY_FILE}
+cat ${POLICY_FILE}
 
 DATE_BEFORE=$(date -I -d "${DAYS_BEFORE} days")
 echo "--- INFO --- DATE BEFORE: "$DATE_BEFORE
@@ -45,6 +48,7 @@ fi
 
 # purge orchestration instance state, history, and blob storage for orchestrations older than the specified threshold time.
 if [ "${DRY_RUN^^}" = TRUE ]; then
+  # dry run
   echo "--- INFO --- purge-history DRY RUN"
   output=$(func durable get-instances \
           --connection-string-setting ${STORAGE_ACCOUNT}"_STORAGE" \
@@ -52,6 +56,7 @@ if [ "${DRY_RUN^^}" = TRUE ]; then
           --created-before ${DATE_BEFORE} \
           --runtime-status ${LIST_STATUS} 2>&1)
 else
+  # real execution
   echo "--- INFO --- purge-history"
   # func durable purge-history \
   output=$(func durable get-instances \
