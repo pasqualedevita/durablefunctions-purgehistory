@@ -40,7 +40,7 @@ parameters:
   - name: 'DAYS_BEFORE'
     displayName: 'Set days before:'
     type: number
-    default: 30
+    default: -30
 
   - name: 'NO_STATUS_FILTER'
     displayName: 'Apply purge to all status (ignore status)'

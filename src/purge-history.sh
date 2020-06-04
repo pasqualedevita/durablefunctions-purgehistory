@@ -10,7 +10,7 @@ fi
 # load env variables
 source ${CONF_FILE}
 
-DATE_BEFORE=$(date -I -d "-${DAYS_BEFORE} days")
+DATE_BEFORE=$(date -I -d "${DAYS_BEFORE} days")
 echo "--- INFO --- DATE BEFORE: "$DATE_BEFORE
 
 echo "--- INFO --- START PURGE HISTORY STORAGE ACCOUNT: "${STORAGE_ACCOUNT}
@@ -20,18 +20,25 @@ cd dummy-project
 touch local.settings.json
 
 # add a local app setting using the value from an Azure Storage account. Requires Azure login.
-func azure storage fetch-connection-string ${STORAGE_ACCOUNT}
+output=$(func azure storage fetch-connection-string "p"${STORAGE_ACCOUNT} 2>&1)
+exit_status=$?
+if [ "${exit_status}" -eq 0 ]; then
+  echo "--- INFO --- fetch-connection-string OK"
+else
+  echo "--- ERROR --- fetch-connection-string FAIL"
+  exit 1
+fi
 
 # purge orchestration instance state, history, and blob storage for orchestrations older than the specified threshold time.
 if [ "${DRY_RUN^^}" = TRUE ]; then
-  echo "--- INFO --- DRY RUN"
+  echo "--- INFO --- purge-history DRY RUN"
   output=$(func durable get-instances \
           --connection-string-setting ${STORAGE_ACCOUNT}"_STORAGE" \
           --task-hub-name ${TASK_HUB} \
           --created-before ${DATE_BEFORE} \
           --runtime-status ${LIST_STATUS} 2>&1)
 else
-  echo "--- INFO --- REAL EXECUTION"
+  echo "--- INFO --- purge-history"
   # func durable purge-history \
   output=$(func durable get-instances \
           --connection-string-setting ${STORAGE_ACCOUNT}"p_STORAGE" \
@@ -42,9 +49,10 @@ fi
 
 exit_status=$?
 if [ "${exit_status}" -eq 0 ]; then
-  echo "--- INFO --- OPERATION OK"
+  echo "--- INFO --- purge-history OK"
 else
-  echo "--- ERROR --- OPERATION FAIL"
+  echo "--- ERROR --- purge-history FAIL"
+  exit 1
 fi
 
 echo "--- INFO --- END PURGE HISTORY STORAGE ACCOUNT: "${STORAGE_ACCOUNT}
