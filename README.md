@@ -8,10 +8,10 @@ It includes two pipelines:
 Policies pipeline is scheduled to run every night.
 
 azure-pipelines-policies.yml  
-[![Build Status](https://dev.azure.com/pasqdvt/df-purgehistory/_apis/build/status/df-purgehistory-scheduled?branchName=master)](https://dev.azure.com/pasqdvt/df-purgehistory/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/pasqdvt/df-purgehistory/_apis/build/status/df-purgehistory-policies?branchName=master)](https://dev.azure.com/pasqdvt/df-purgehistory/_build/latest?definitionId=1&branchName=master)
 
 azure-pipelines-custom.yml  
-[![Build Status](https://dev.azure.com/pasqdvt/df-purgehistory/_apis/build/status/df-purgehistory-scheduled?branchName=master)](https://dev.azure.com/pasqdvt/df-purgehistory/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/pasqdvt/df-purgehistory/_apis/build/status/df-purgehistory-custom?branchName=master)](https://dev.azure.com/pasqdvt/df-purgehistory/_build/latest?definitionId=2&branchName=master)
 
 ## Project structure
 
