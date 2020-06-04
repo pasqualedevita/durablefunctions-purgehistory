@@ -27,7 +27,21 @@ source ${POLICY_FILE}
 
 # check taskhub table exists
 # TODO: check all azure resource that create a function app
-output=$(az storage table exists --name ${TASK_HUB}Instances --account-name ${STORAGE_ACCOUNT} --query 'exists')
+connectionString=$(az storage account show-connection-string --name ${STORAGE_ACCOUNT} --query 'connectionString' 2>&1)
+
+exit_status=$?
+if [ "${exit_status}" -ne 0 ]; then
+  echo "--- ERROR --- az storage account show-connection-string FAIL"
+  exit 1
+fi
+
+output=$(az storage table exists --name ${TASK_HUB}Instances --account-name ${STORAGE_ACCOUNT} --connection-string $connectionString --query 'exists' 2>&1)
+
+exit_status=$?
+if [ "${exit_status}" -ne 0 ]; then
+  echo "--- ERROR --- az storage table exists FAIL"
+  exit 1
+fi
 
 if [ "${output^^}" = FALSE ]; then
   echo "--- ERROR --- table ${TASK_HUB}Instances does not exists"
