@@ -20,7 +20,7 @@ cd dummy-project
 touch local.settings.json
 
 # add a local app setting using the value from an Azure Storage account. Requires Azure login.
-output=$(func azure storage fetch-connection-string "p"${STORAGE_ACCOUNT} 2>&1)
+output=$(func azure storage fetch-connection-string ${STORAGE_ACCOUNT} 2>&1)
 exit_status=$?
 if [ "${exit_status}" -eq 0 ]; then
   echo "--- INFO --- fetch-connection-string OK"
@@ -41,7 +41,7 @@ else
   echo "--- INFO --- purge-history"
   # func durable purge-history \
   output=$(func durable get-instances \
-          --connection-string-setting ${STORAGE_ACCOUNT}"p_STORAGE" \
+          --connection-string-setting ${STORAGE_ACCOUNT}"_STORAGE" \
           --task-hub-name ${TASK_HUB} \
           --created-before ${DATE_BEFORE} \
           --runtime-status ${LIST_STATUS} 2>&1)
