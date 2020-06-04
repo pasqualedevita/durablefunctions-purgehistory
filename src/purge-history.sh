@@ -38,6 +38,7 @@ touch local.settings.json
 
 # add a local app setting using the value from an Azure Storage account. Requires Azure login.
 output=$(func azure storage fetch-connection-string ${STORAGE_ACCOUNT} 2>&1)
+
 exit_status=$?
 if [ "${exit_status}" -eq 0 ]; then
   echo "--- INFO --- fetch-connection-string OK"
@@ -69,12 +70,13 @@ fi
 exit_status=$?
 if [ "${exit_status}" -eq 0 ]; then
   echo "--- INFO --- purge-history OK"
+  # remove local.settings.json
+  rm local.settings.json
 else
   echo "--- ERROR --- purge-history FAIL"
+  # remove local.settings.json
+  rm local.settings.json
   exit 1
 fi
 
 echo "--- INFO --- END PURGE HISTORY STORAGE ACCOUNT: "${STORAGE_ACCOUNT}
-
-# remove local.settings.json
-rm local.settings.json
