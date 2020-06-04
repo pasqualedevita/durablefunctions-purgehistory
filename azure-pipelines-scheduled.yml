@@ -20,10 +20,14 @@ parameters:
       - DEV-IO-SERVICE-CONN_FAKE
       
   - name: 'DRY_RUN'
-    displayName: 'Select the environment for which purge durable function history:'
+    displayName: 'Dry run do not apply changes'
     type: boolean
     default: false
-  
+
+variables:
+  - name: 'DRY_RUN'
+    value: '${{ parameters.DRY_RUN }}'
+
 pool:
   vmImage: 'ubuntu-latest'
 

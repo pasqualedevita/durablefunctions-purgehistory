@@ -57,6 +57,8 @@ parameters:
       - failed
 
 variables:
+  - name: 'DRY_RUN'
+    value: '${{ parameters.DRY_RUN }}'
   - name: 'STORAGE_ACCOUNT'
     value: '${{ parameters.STORAGE_ACCOUNT }}'
   - name: 'TASK_HUB'

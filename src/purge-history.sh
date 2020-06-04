@@ -23,12 +23,29 @@ touch local.settings.json
 func azure storage fetch-connection-string ${STORAGE_ACCOUNT}
 
 # purge orchestration instance state, history, and blob storage for orchestrations older than the specified threshold time.
-# func durable purge-history \
-func durable get-instances \
-  --connection-string-setting ${STORAGE_ACCOUNT}"_STORAGE" \
-  --task-hub-name ${TASK_HUB} \
-  --created-before ${DATE_BEFORE} \
-  --runtime-status ${LIST_STATUS}
+if [ "${DRY_RUN^^}" = TRUE ]; then
+  echo "--- INFO --- DRY RUN"
+  output=$(func durable get-instances \
+          --connection-string-setting ${STORAGE_ACCOUNT}"_STORAGE" \
+          --task-hub-name ${TASK_HUB} \
+          --created-before ${DATE_BEFORE} \
+          --runtime-status ${LIST_STATUS} 2>&1)
+else
+  echo "--- INFO --- REAL EXECUTION"
+  # func durable purge-history \
+  output=$(func durable get-instances \
+          --connection-string-setting ${STORAGE_ACCOUNT}"p_STORAGE" \
+          --task-hub-name ${TASK_HUB} \
+          --created-before ${DATE_BEFORE} \
+          --runtime-status ${LIST_STATUS} 2>&1)
+fi
+
+exit_status=$?
+if [ "${exit_status}" -eq 0 ]; then
+  echo "--- INFO --- OPERATION OK"
+else
+  echo "--- ERROR --- OPERATION FAIL"
+fi
 
 echo "--- INFO --- END PURGE HISTORY STORAGE ACCOUNT: "${STORAGE_ACCOUNT}
 
