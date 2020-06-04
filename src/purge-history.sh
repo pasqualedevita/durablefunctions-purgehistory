@@ -24,6 +24,8 @@ fi
 
 # load env variables
 source ${POLICY_FILE}
+echo "--- INFO --- policy file "${POLICY_FILE}
+cat ${POLICY_FILE}
 
 # check taskhub table exists
 # TODO: check all azure resource that create a function app
@@ -47,9 +49,6 @@ if [ "${output^^}" = FALSE ]; then
   echo "--- ERROR --- table ${TASK_HUB}Instances does not exists"
   exit 1
 fi
-
-echo "--- INFO --- policy file "${POLICY_FILE}
-cat ${POLICY_FILE}
 
 DATE_BEFORE=$(date -I -d "${DAYS_BEFORE} days")
 echo "--- INFO --- DATE BEFORE: "$DATE_BEFORE
