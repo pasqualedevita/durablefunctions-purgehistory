@@ -7,6 +7,7 @@ if [ ! -f "${CONF_FILE}" ]; then
   exit 1
 fi
 
+# load env variables
 source ${CONF_FILE}
 
 DATE_BEFORE=$(date -I -d "-${DAYS_BEFORE} days")
@@ -18,10 +19,10 @@ cd dummy-project
 # create empty local.settings.json
 touch local.settings.json
 
-# Add a local app setting using the value from an Azure Storage account. Requires Azure login.
+# add a local app setting using the value from an Azure Storage account. Requires Azure login.
 func azure storage fetch-connection-string ${STORAGE_ACCOUNT}
 
-# Purge orchestration instance state, history, and blob storage for orchestrations older than the specified threshold time.
+# purge orchestration instance state, history, and blob storage for orchestrations older than the specified threshold time.
 # func durable purge-history \
 func durable get-instances \
   --connection-string-setting ${STORAGE_ACCOUNT}"_STORAGE" \

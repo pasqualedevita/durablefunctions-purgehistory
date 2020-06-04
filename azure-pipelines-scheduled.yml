@@ -16,14 +16,23 @@ parameters:
     default: DEV-SERVICE_PRINCIPAL-CONNECTION
     values:
       - DEV-SERVICE_PRINCIPAL-CONNECTION
-      - PRODUCTION_FAKE
-
-# Linux based agent; all except the first step will also work on Windows
+      - PROD-IO-SERVICE-CONN_FAKE
+      - DEV-IO-SERVICE-CONN_FAKE
+      
+  - name: 'DRY_RUN'
+    displayName: 'Select the environment for which purge durable function history:'
+    type: boolean
+    default: false
+  
 pool:
   vmImage: 'ubuntu-latest'
 
 # The scheduled trigger will be set in the Azure DevOps portal
-trigger: none
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
 
 jobs:
   - job: purge_df_history
@@ -48,8 +57,7 @@ jobs:
           scriptLocation: 'inlineScript'
           failOnStandardError: true
           inlineScript: |
-            for entry in df-conf/*
+            for policy in policies/*
             do
-              Write-Host "##vso[task.logdetail]current operation"
-              bash purge-history.sh ${entry}
+              bash src/purge-history.sh ${policy}
             done

@@ -16,7 +16,13 @@ parameters:
     default: DEV-SERVICE_PRINCIPAL-CONNECTION
     values:
       - DEV-SERVICE_PRINCIPAL-CONNECTION
-      - PRODUCTION_FAKE
+      - PROD-IO-SERVICE-CONN_FAKE
+      - DEV-IO-SERVICE-CONN_FAKE
+
+  - name: 'DRY_RUN'
+    displayName: 'Dry run do not apply changes'
+    type: boolean
+    default: false
 
   - name: 'STORAGE_ACCOUNT'
     displayName: 'Set Storage Account name:'
@@ -64,11 +70,10 @@ variables:
   - name: 'LIST_STATUS'
     value: '${{ parameters.LIST_STATUS }}'
 
-# Linux based agent; all except the first step will also work on Windows
 pool:
   vmImage: 'ubuntu-latest'
 
-# The scheduled trigger will be set in the Azure DevOps portal
+# Manual execution
 trigger: none
 
 jobs:
@@ -94,5 +99,5 @@ jobs:
           scriptLocation: 'inlineScript'
           failOnStandardError: true
           inlineScript: |
-            bash configure-manual.sh df-conf/manual.env
-            bash purge-history.sh df-conf/manual.env
+            bash src/configure-manual.sh policies/tmp-manual.env
+            bash src/purge-history.sh policies/tmp-manual.env
