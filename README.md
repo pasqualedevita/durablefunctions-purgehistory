@@ -37,3 +37,10 @@ DAYS_BEFORE='-30'
 # Can provide multiple (space separated) statuses: completed terminated canceled failed
 LIST_STATUS='completed'
 ```
+
+## Azure role assignments
+
+This pipeline requires to assign the role Storage Account Contributor into targets storage accounts.
+
+## License
+Please refer to [IO license agreement](https://github.com/pagopa/io-app/blob/master/LICENSE).
