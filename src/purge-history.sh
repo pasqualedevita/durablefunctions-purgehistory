@@ -9,10 +9,11 @@
 #
 # Steps:
 # 1. check .env file exists and load parameters
-# 2. calculate ${DATE_BEFORE}
-# 3. get connection string to storage account and save it in temporary local.settings.json
-# 4. purge orchestrators history with specified parameters
-# 5. delete temporary local.settings.json
+# 2. check taskhub table exists
+# 3. calculate ${DATE_BEFORE}
+# 4. get connection string to storage account and save it in temporary local.settings.json
+# 5. purge orchestrators history with specified parameters
+# 6. delete temporary local.settings.json
 
 POLICY_FILE=$1
 
@@ -23,6 +24,15 @@ fi
 
 # load env variables
 source ${POLICY_FILE}
+
+# check taskhub table exists
+# TODO: check all azure resource that create a function app
+output=$(az storage table exists --name ${TASK_HUB}Instances --account-name ${STORAGE_ACCOUNT} --query 'exists')
+
+if [ "${output^^}" = FALSE ]; then
+  echo "--- ERROR --- table ${TASK_HUB}Instances does not exists"
+  exit 1
+fi
 
 echo "--- INFO --- policy file "${POLICY_FILE}
 cat ${POLICY_FILE}
