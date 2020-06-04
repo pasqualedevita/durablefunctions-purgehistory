@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+### DESCRIPTION
+# This script purge durable function history with specified variables.
+# To avoid possible console log data exposure, all outputs commands are catched
+#
+# Input: 
+# $1: path to .env file variables
+#
+# Steps:
+# 1. check .env file exists and load parameters
+# 2. calculate ${DATE_BEFORE}
+# 3. get connection string to storage account and save it in temporary local.settings.json
+# 4. purge orchestrators history with specified parameters
+# 5. delete temporary local.settings.json
+
 CONF_FILE=$1
 
 if [ ! -f "${CONF_FILE}" ]; then

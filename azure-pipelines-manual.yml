@@ -1,44 +1,48 @@
 # Azure DevOps pipeline for automating purge durable functions history.
 #
-# The following parameter needs to be set to identify the environment for which
-# should be ordered or renewed a certificate via ACME:
-# - ENVIRONMENT: TEST | PRODUCTION
+# The following parameter needs to be set to identify the Azure subscription :
+# - SUBSCRIPTION: PROD-IO-SERVICE-CONN | DEV-IO-SERVICE-CONN
 #
-# The following pipeline variables have to be added and configured based on the
-# environment:
-# - PRODUCTION_AZURE_SUBSCRIPTION: service connection name
-# - TEST_AZURE_SUBSCRIPTION: service connection name for test only
+# The following pipeline parameters have to be setted for manual execution:
+# - SUBSCRIPTION: service connection name
+# - DRY_RUN: run pipeline without apply any changes
+# - STORAGE_ACCOUNT: storage account name to connect
+# - TASK_HUB: taskhub name setted in durable function host.json
+# - NO_DATE_FILTER: if true do not apply any date filter (ignore DAYS_BEFORE)
+# - DAYS_BEFORE: number of days to apply date filter (negative -> past, positive -> future)
+# - NO_STATUS_FILTER: if true do not apply any status filter (ignore LIST_STATUS)
+# - LIST_STATUS: filter orchestrator's status
 
 parameters:
-  - name: 'ENVIRONMENT'
-    displayName: 'Select the environment for which purge durable function history:'
+  - name: 'SUBSCRIPTION'
+    displayName: 'Select the Azure subscription for which purge durable function history'
     type: string
     default: DEV-SERVICE_PRINCIPAL-CONNECTION
     values:
       - DEV-SERVICE_PRINCIPAL-CONNECTION
-      - PROD-IO-SERVICE-CONN_FAKE
-      - DEV-IO-SERVICE-CONN_FAKE
+      - PROD-IO-SERVICE-CONN
+      - DEV-IO-SERVICE-CONN
 
   - name: 'DRY_RUN'
-    displayName: 'Dry run do not apply changes'
+    displayName: 'Dry run (do not apply changes)'
     type: boolean
     default: false
 
   - name: 'STORAGE_ACCOUNT'
-    displayName: 'Set Storage Account name:'
+    displayName: 'Set Storage Account name'
     type: string
 
   - name: 'TASK_HUB'
-    displayName: 'Set TaskHub name:'
+    displayName: 'Set TaskHub name'
     type: string
 
   - name: 'NO_DATE_FILTER'
-    displayName: 'Apply purge without date filter (ignore days before)'
+    displayName: 'Apply purge without date filter (ignore days)'
     type: boolean
     default: false
 
   - name: 'DAYS_BEFORE'
-    displayName: 'Set days before:'
+    displayName: 'Set days (negative -> past, positive -> future)'
     type: number
     default: -30
 
@@ -48,7 +52,7 @@ parameters:
     default: false
 
   - name: 'LIST_STATUS'
-    displayName: 'Set status:'
+    displayName: 'Set status'
     type: string
     values:
       - completed
@@ -96,7 +100,7 @@ jobs:
       - task: AzureCLI@2
         displayName: Purge History
         inputs:
-          azureSubscription: '${{ parameters.ENVIRONMENT }}'
+          azureSubscription: '${{ parameters.SUBSCRIPTION }}'
           scriptType: 'bash'
           scriptLocation: 'inlineScript'
           failOnStandardError: true
