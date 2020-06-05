@@ -82,8 +82,7 @@ if [ "${DRY_RUN^^}" = TRUE ]; then
 else
   # real execution
   echo "--- INFO --- purge-history"
-  # func durable purge-history \
-  output=$(func durable get-instances \
+  output=$(func durable purge-history \
           --connection-string-setting ${STORAGE_ACCOUNT}"_STORAGE" \
           --task-hub-name ${TASK_HUB} \
           --created-before ${DATE_BEFORE} \
