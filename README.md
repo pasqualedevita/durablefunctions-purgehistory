@@ -11,10 +11,10 @@ Policies pipeline is scheduled to run every night.
 Azure pipeline overview: https://dev.azure.com/pagopa-io/durablefunctions-purgehistory
 
 azure-pipelines-policies.yml  
-[![Build Status](https://dev.azure.com/pasqdvt/df-purgehistory/_apis/build/status/df-purgehistory-policies?branchName=master)](https://dev.azure.com/pasqdvt/df-purgehistory/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/pagopa-io/durablefunctions-purgehistory/_apis/build/status/pagopa.df-purgehistory-policies?branchName=master)](https://dev.azure.com/pagopa-io/durablefunctions-purgehistory/_build/latest?definitionId=22&branchName=master)
 
 azure-pipelines-custom.yml  
-[![Build Status](https://dev.azure.com/pasqdvt/df-purgehistory/_apis/build/status/df-purgehistory-custom?branchName=master)](https://dev.azure.com/pasqdvt/df-purgehistory/_build/latest?definitionId=2&branchName=master)
+[![Build Status](https://dev.azure.com/pagopa-io/durablefunctions-purgehistory/_apis/build/status/pagopa.df-purgehistory-custom?branchName=master)](https://dev.azure.com/pagopa-io/durablefunctions-purgehistory/_build/latest?definitionId=23&branchName=master)
 
 ## Repo structure
 
