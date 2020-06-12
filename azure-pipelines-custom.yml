@@ -18,9 +18,8 @@ parameters:
   - name: 'SUBSCRIPTION'
     displayName: 'Select the Azure subscription for which purge durable function history'
     type: string
-    default: DEV-SERVICE_PRINCIPAL-CONNECTION
+    default: DEV-IO-SERVICE-CONN
     values:
-      - DEV-SERVICE_PRINCIPAL-CONNECTION
       - PROD-IO-SERVICE-CONN
       - DEV-IO-SERVICE-CONN
 
