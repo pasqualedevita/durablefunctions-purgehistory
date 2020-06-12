@@ -8,7 +8,7 @@ It includes two pipelines:
 
 Policies pipeline is scheduled to run every night.
 
-Azure pipeline overview: https://dev.azure.com/pasqdvt/df-purgehistory
+Azure pipeline overview: https://dev.azure.com/pagopa-io/durablefunctions-purgehistory
 
 azure-pipelines-policies.yml  
 [![Build Status](https://dev.azure.com/pasqdvt/df-purgehistory/_apis/build/status/df-purgehistory-policies?branchName=master)](https://dev.azure.com/pasqdvt/df-purgehistory/_build/latest?definitionId=1&branchName=master)
