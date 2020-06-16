@@ -50,7 +50,17 @@ if [ "${output^^}" = FALSE ]; then
   exit 1
 fi
 
-DATE_BEFORE=$(date -I -d "${DAYS_BEFORE} days")
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)
+      DATE_BEFORE=$(date -I -d "${DAYS_BEFORE} days");;
+    Darwin*)
+      DATE_BEFORE=$(date -v ${DAYS_BEFORE}d "+%Y-%m-%d");;
+    *)
+      echo "--- ERROR --- OS ${unameOut} not supported"
+      exit 1
+esac
+
 echo "--- INFO --- DATE BEFORE: "$DATE_BEFORE
 
 echo "--- INFO --- START PURGE HISTORY STORAGE ACCOUNT: "${STORAGE_ACCOUNT}
@@ -94,10 +104,12 @@ if [ "${exit_status}" -eq 0 ]; then
   echo "--- INFO --- purge-history OK"
   # remove local.settings.json
   rm local.settings.json
+  rm -rf azure-functions-core-tools
 else
   echo "--- ERROR --- purge-history FAIL"
   # remove local.settings.json
   rm local.settings.json
+  rm -rf azure-functions-core-tools
   exit 1
 fi
 

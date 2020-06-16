@@ -42,5 +42,42 @@ LIST_STATUS='completed'
 
 This pipeline requires to assign the role Storage Account Contributor into targets storage accounts.
 
+## Run with Docker from local machine
+
+Requirements:
+1. [az cli](https://docs.microsoft.com/it-it/cli/azure/install-azure-cli)
+1. docker
+
+### 1. Build docker image
+
+```bash
+cd durablefunctions-purgehistory
+docker build -t durablefunctions-purgehistory:v0.1 docker
+```
+
+### 2. Login with azure cli
+
+```bash
+az login
+az account set --subscription "SET_SUBSCRIPTION"
+az account list --output table
+```
+
+### 3. Run
+
+```bash
+# DRY_RUN='True' check only connections without apply any changes
+# POLICY_FILE='df-sample.env.sample' apply only specified policy
+# Empty POLICY_FILE apply policy files with .env in policies folder
+
+cd durablefunctions-purgehistory
+docker run --rm -it \
+       -v ${HOME}/.azure:/root/.azure \
+       -v ${PWD}:/usr/src/app \
+       -e DRY_RUN='True' \
+       -e POLICY_FILE='df-sample.env.sample' \
+       durablefunctions-purgehistory:v0.1
+```
+
 ## License
 Please refer to [IO license agreement](https://github.com/pagopa/io-app/blob/master/LICENSE).
