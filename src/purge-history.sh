@@ -15,12 +15,27 @@
 # 5. purge orchestrators history with specified parameters
 # 6. delete temporary local.settings.json
 
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)
+      echo "--- INFO --- current OS ${unameOut}"
+      ;;
+    Darwin*)
+      echo "--- INFO --- current OS ${unameOut}"
+      ;;
+    *)
+      echo "--- ERROR --- OS ${unameOut} not supported"
+      exit 1
+esac
+
 POLICY_FILE=$1
 
 if [ ! -f "${POLICY_FILE}" ]; then
   echo "--- ERROR --- policy file ${POLICY_FILE} does not exist"
   exit 1
 fi
+
+az account list --output table
 
 # load env variables
 source ${POLICY_FILE}
@@ -50,12 +65,13 @@ if [ "${output^^}" = FALSE ]; then
   exit 1
 fi
 
-unameOut="$(uname -s)"
 case "${unameOut}" in
     Linux*)
-      DATE_BEFORE=$(date -I -d "${DAYS_BEFORE} days");;
+      DATE_BEFORE=$(date -I -d "${DAYS_BEFORE} days")
+      ;;
     Darwin*)
-      DATE_BEFORE=$(date -v ${DAYS_BEFORE}d "+%Y-%m-%d");;
+      DATE_BEFORE=$(date -v ${DAYS_BEFORE}d "+%Y-%m-%d")
+      ;;
     *)
       echo "--- ERROR --- OS ${unameOut} not supported"
       exit 1
