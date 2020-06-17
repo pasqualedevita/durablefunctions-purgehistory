@@ -36,11 +36,34 @@ TASK_HUB='set_task_hub'
 DAYS_BEFORE='-30'
 # Can provide multiple (space separated) statuses: completed terminated canceled failed
 LIST_STATUS='completed'
+# Optional you can override DRY_RUN variable
+# DRY_RUN='True'
 ```
 
 ## Azure role assignments
 
 This pipeline requires to assign the role Storage Account Contributor into targets storage accounts.
+
+## Run on local machine
+
+Requirements:
+1. [az cli](https://docs.microsoft.com/it-it/cli/azure/install-azure-cli)
+1. [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local) 
+
+### 1. Login with azure cli
+
+```bash
+az login
+az account set --subscription "SET_SUBSCRIPTION"
+az account list --output table
+```
+
+### 2. Run
+
+```bash
+cd durablefunctions-purgehistory
+bash src/purge-history.sh policies/df-sample.env.sample
+```
 
 ## Run with Docker from local machine
 
