@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 # common
 RUN apt-get update \
-    && apt-get install -y apt-transport-https bash wget curl
+    && apt-get install -y apt-transport-https bash wget curl git
 
 # azure cli
 RUN apt-get update \
@@ -20,7 +20,16 @@ RUN wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-p
 # azure-functions-core-tools-3
 RUN apt-get install -y azure-functions-core-tools-3
 
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+# cache dotnet libs
+RUN git clone https://github.com/pagopa/durablefunctions-purgehistory.git && \
+    cd durablefunctions-purgehistory/dummy-project && \
+    dotnet publish -o bin && \
+    cd ../../ && rm -rf durablefunctions-purgehistory
+
 ENV DRY_RUN='False'
+ENV NO_CACHE='False'
 
 COPY entrypoint.sh /entrypoint.sh
 
