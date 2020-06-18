@@ -113,7 +113,7 @@ https://github.com/Azure/azure-powershell/issues/6585
 As workaround, run an az command without parameters to refresh the token.
 
 ```bash
-# sample commando to refresh access token
+# sample command to refresh access token
 az account list-locations
 ```
 
