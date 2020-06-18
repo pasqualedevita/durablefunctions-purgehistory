@@ -102,5 +102,20 @@ docker run --rm -it \
        durablefunctions-purgehistory:v0.1
 ```
 
+## known issues
+
+Running on local machine you can get in an error that the access token expiry UTC time.
+
+https://github.com/Azure/azure-cli/issues/4722
+
+https://github.com/Azure/azure-powershell/issues/6585
+
+As workaround, run an az command without parameters to refresh the token.
+
+```bash
+# sample commando to refresh access token
+az account list-locations
+```
+
 ## License
 Please refer to [IO license agreement](https://github.com/pagopa/io-app/blob/master/LICENSE).
