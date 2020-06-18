@@ -15,6 +15,11 @@
 # 5. purge orchestrators history with specified parameters
 # 6. delete temporary local.settings.json
 
+function delete_sensitive_information {
+  rm local.settings.json
+  rm -rf azure-functions-core-tools
+}
+
 unameOut="$(uname -s)"
 case "${unameOut}" in
     Linux*)
@@ -85,6 +90,20 @@ cd dummy-project
 # create empty local.settings.json
 touch local.settings.json
 
+# clear bin obj cache,
+if [ "${NO_CACHE^^}" = TRUE ]; then
+  # delete cache
+  echo "--- INFO --- delete cache"
+  rm -rf bin
+  rm -rf obj
+fi
+# rebuild project if bin folder does not exits
+if [ ! -d "bin/" ]; then
+  # DOTNET_CLI_TELEMETRY_OPTOUT=1 do not send telemetry information to microsoft
+  export DOTNET_CLI_TELEMETRY_OPTOUT=1
+  dotnet publish -o bin
+fi
+
 # add a local app setting using the value from an Azure Storage account. Requires Azure login.
 output=$(func azure storage fetch-connection-string ${STORAGE_ACCOUNT} 2>&1)
 
@@ -118,14 +137,12 @@ fi
 exit_status=$?
 if [ "${exit_status}" -eq 0 ]; then
   echo "--- INFO --- purge-history OK"
-  # remove local.settings.json
-  rm local.settings.json
-  rm -rf azure-functions-core-tools
+  # remove sensitive information
+  delete_sensitive_information
 else
   echo "--- ERROR --- purge-history FAIL"
-  # remove local.settings.json
-  rm local.settings.json
-  rm -rf azure-functions-core-tools
+  # remove cachesd items
+  delete_sensitive_information
   exit 1
 fi
 
