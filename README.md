@@ -105,7 +105,7 @@ docker run --rm -it \
 
 ## known issues
 
-Running on local machine you can get in an error that the access token expiry UTC time.
+Running on local machine you can get in an error with az cli access token with expired UTC time.
 
 https://github.com/Azure/azure-cli/issues/4722
 
