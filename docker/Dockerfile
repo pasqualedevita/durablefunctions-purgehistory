@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 # common
 RUN apt-get update \
-    && apt-get install -y apt-transport-https bash wget curl git
+    && apt-get install -y apt-transport-https bash wget curl git jq
 
 # azure cli
 RUN apt-get update \
