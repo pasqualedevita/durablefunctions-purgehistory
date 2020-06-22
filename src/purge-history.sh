@@ -125,17 +125,20 @@ function get_dry_run_continuation_token {
   response="$@"
   # truncate response to speedup regex
   # last 1000 characters are enough to contains the continuation token expected expression
-  response_truncated=${response:(-1000)}
+  if [ ${#response} -gt 1000 ]; then
+    response=${response:(-1000)}
+  fi
   
   continuation_token_startstring='Continuation token for next set of results: '
-  continuation_token=`echo "${response_truncated#*$continuation_token_startstring}"`
+  continuation_token=`echo "${response#*$continuation_token_startstring}"`
   # remove 2 ' from continuation_token
   continuation_token=`echo "${continuation_token//"'"}"`
   continuation_token_length=`echo ${#continuation_token}`
 
   if [[ ${continuation_token_length} == 0 ]]; then
-      echo -e "--- ERROR --- ${RED}unexpected continuation-token${NC}"
-      exit 1
+    echo -e "--- ERROR --- ${RED}unexpected continuation-token${NC}"
+    delete_sensitive_information
+    exit 1
   fi
   
   if [[ ${continuation_token} == 'bnVsbA==' ]]; then
@@ -199,12 +202,12 @@ function execute_dry_run {
       fi
       
       output=$(func durable get-instances \
-        --connection-string-setting ${STORAGE_ACCOUNT}"_STORAGE" \
-        --task-hub-name ${TASK_HUB} \
-        --created-before ${DATE_BEFORE} \
-        --runtime-status ${LIST_STATUS} \
-        --top ${top} \
-        --continuation-token ${continuation_token} 2>&1)
+            --connection-string-setting ${STORAGE_ACCOUNT}"_STORAGE" \
+            --task-hub-name ${TASK_HUB} \
+            --created-before ${DATE_BEFORE} \
+            --runtime-status ${LIST_STATUS} \
+            --top ${top} \
+            --continuation-token ${continuation_token} 2>&1)
       exit_status=$?
 
       [[ false ]] || break
@@ -276,6 +279,7 @@ function purge_history {
   else
     echo -e ${SPACES}
     echo -e "--- ERROR --- ${RED}fetch-connection-string FAIL${NC}"
+    delete_sensitive_information
     exit 1
   fi
 
