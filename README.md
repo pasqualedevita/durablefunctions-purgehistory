@@ -48,7 +48,8 @@ This pipeline requires to assign the role Storage Account Contributor into targe
 
 Requirements:
 1. [az cli](https://docs.microsoft.com/it-it/cli/azure/install-azure-cli)
-1. [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local) 
+1. [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local)
+1. [jq](https://stedolan.github.io/jq/download)
 
 ### 1. Login with azure cli
 
@@ -69,7 +70,7 @@ bash src/purge-history.sh policies/df-sample.env.sample
 
 Requirements:
 1. [az cli](https://docs.microsoft.com/it-it/cli/azure/install-azure-cli)
-1. docker
+1. [docker](https://docs.docker.com/get-docker)
 
 ### 1. Build docker image
 
